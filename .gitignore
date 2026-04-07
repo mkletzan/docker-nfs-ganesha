@@ -1,17 +1,14 @@
-# Ignore all files and folders in the root
-/*
+# Build artifacts
+*.tar
 
-# Allow files/folders using a negation pattern
-# To allow a subfolder and all files/folders below (e.g. foo/bar/baz):
-# !foo
-# foo/*
-# !foo/bar/baz/
+# Test artifacts
+tests/*.log
 
-!.gitignore
-!*.sh
-!*.md
+# Tools
+.tools/
 
-!rootfs/
+# Environment
+.env
 
-# Ignore these files in any folders
-**/.DS_Store
+# SBOM
+*.spdx.json

@@ -50,6 +50,7 @@ init_dbus() {
 
 bootstrap_config() {
     echo "* Writing configuration"
+    mkdir -p $(dirname ${GANESHA_CONFIG})
     cat <<END >${GANESHA_CONFIG}
 
 NFSV4 { Graceless = ${GRACELESS}; }
