@@ -88,3 +88,83 @@ Tested protocol versions:
 - ✅ NFSv4.1 - Works (default for tests)
 - ❌ NFSv4.2 - Not supported (mount fails with I/O error)
 
+Tests use NFSv4.1 as the best balance of features and compatibility.
+
+## Troubleshooting
+
+### Tests fail to run
+
+**Problem:** docker-compose not found  
+**Solution:** Install docker-compose or use `docker compose` (built-in plugin)
+
+**Problem:** Permission denied errors  
+**Solution:** Ensure Docker daemon is running and you have permissions to use it
+
+### Tests fail
+
+**Problem:** NFS mount fails  
+**Solution:** 
+- Check that the NFS-Ganesha container is running: `docker-compose -f tests/docker-compose.test.yml ps`
+- Check logs: `docker-compose -f tests/docker-compose.test.yml logs nfs-ganesha`
+
+**Problem:** Timeout waiting for server  
+**Solution:** Increase sleep time in `run-tests.sh` if your system is slow
+
+### Debugging
+
+To debug a failing test:
+
+1. Keep the test environment running:
+   ```bash
+   docker-compose -f tests/docker-compose.test.yml up -d
+   ```
+
+2. Enter the NFS server container:
+   ```bash
+   docker-compose -f tests/docker-compose.test.yml exec nfs-ganesha bash
+   ```
+
+3. Enter the test client container:
+   ```bash
+   docker-compose -f tests/docker-compose.test.yml exec test-runner bash
+   ```
+
+4. Clean up when done:
+   ```bash
+   docker-compose -f tests/docker-compose.test.yml down -v
+   ```
+
+## Test Development
+
+### Adding New Tests
+
+Edit `run-tests.sh` to add new test cases. Follow the existing pattern:
+
+```bash
+echo "→ Testing feature X..."
+if ! command_to_test; then
+    echo "❌ Feature X failed!"
+    exit 1
+fi
+```
+
+### Testing Environment Variables
+
+To test different configurations, modify the `environment` section in `docker-compose.test.yml`:
+
+```yaml
+environment:
+  - EXPORT_PATH=/custom/path
+  - PROTOCOLS=3
+  - VERBOSITY=NIV_DEBUG
+```
+
+Then verify the configuration is applied correctly in your test script.
+
+## CI/CD
+
+These tests run automatically in GitHub Actions on every pull request. See `.github/workflows/ci.yml` for the CI configuration.
+
+## License
+
+Same as parent project.

@@ -1,0 +1,33 @@
+services:
+  nfs-ganesha:
+    build:
+      context: ..
+    # Minimal capabilities for file operations
+    cap_add:
+      - DAC_OVERRIDE
+      - DAC_READ_SEARCH
+    environment:
+      - EXPORT_PATH=/data/nfs
+      - VERBOSITY=NIV_DEBUG
+    volumes:
+      - nfs-data:/data/nfs
+    networks:
+      - test-network
+
+  test-runner:
+    image: quay.io/centos/centos:stream10
+    depends_on:
+      - nfs-ganesha
+    # Client might need privileges for NFS mount
+    privileged: true
+    volumes:
+      - ./run-tests.sh:/run-tests.sh:ro
+    networks:
+      - test-network
+    command: /run-tests.sh
+
+volumes:
+  nfs-data:
+
+networks:
+  test-network:
