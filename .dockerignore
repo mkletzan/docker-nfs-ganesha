@@ -1,0 +1,82 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+
+# Documentation
+*.md
+README*
+CHANGELOG*
+LICENSE*
+docs/
+
+# Tests
+tests/
+*.test
+
+# Build artifacts
+*.tar
+*.tar.gz
+*.zip
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Docker files (don't copy into image)
+docker-compose.yml
+docker-compose.*.yml
+Dockerfile.*
+
+# Build tools
+Makefile
+
+# Security
+*.key
+*.pem
+*.crt
+*.p12
+credentials*
+
+# SBOM and security scan results
+*.spdx.json
+*.sbom.json
+sbom/
+scan-results/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+venv/
+.venv/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+.tools/
+
+# Container data (if building in repo dir)
+data/

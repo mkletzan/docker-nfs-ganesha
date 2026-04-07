@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  nfs-ganesha:
+    image: ghcr.io/USER/nfs-ganesha:latest
+    container_name: nfs-server
+
+    # Minimal capabilities - NFS-Ganesha doesn't need privileged mode
+    cap_add:
+      - DAC_OVERRIDE
+      - DAC_READ_SEARCH
+
+    # Environment configuration
+    environment:
+      # Path to export (inside container)
+      - EXPORT_PATH=/data/nfs
+
+      # NFSv4 pseudo path
+      - PSEUDO_PATH=/
+
+      # Export ID
+      - EXPORT_ID=0
+
+      # NFS protocol version (3, 4, or "3,4")
+      - PROTOCOLS=4
+
+      # Network transports
+      - TRANSPORTS=UDP, TCP
+
+      # Security type
+      - SEC_TYPE=sys
+
+      # Root squash mode (No_Root_Squash, Root_Squash, All_Squash)
+      - SQUASH_MODE=No_Root_Squash
+
+      # Graceless recovery
+      - GRACELESS=true
+
+      # Log verbosity (NIV_DEBUG, NIV_EVENT, NIV_WARN)
+      - VERBOSITY=NIV_EVENT
+
+    # Mount host directory to container
+    # Replace ./data with your actual data path
+    volumes:
+      - ./data:/data/nfs
+      # For SELinux systems (Fedora, RHEL), use :z or :Z suffix:
+      # - ./data:/data/nfs:z
+
+    # NFS ports
+    ports:
+      - "2049:2049"       # NFS
+      - "111:111"         # Portmapper TCP
+      - "111:111/udp"     # Portmapper UDP
+      - "662:662"         # Statd (optional)
+      - "38465-38467:38465-38467"  # Ganesha dynamic ports (optional)
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "showmount", "-e", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+# Create named volume (alternative to host bind mount)
+# Uncomment to use Docker volume instead of host directory:
+#
+# volumes:
+#   nfs-data:
+#     driver: local
+
+# Example configurations:
+
+# 1. Custom export path:
+#    environment:
+#      - EXPORT_PATH=/exports
+#    volumes:
+#      - ./my-exports:/exports
+
+# 2. Debug mode with verbose logging:
+#    environment:
+#      - VERBOSITY=NIV_DEBUG
+
+# 3. NFSv3 and NFSv4:
+#    environment:
+#      - PROTOCOLS=3,4
+
+# 4. Root squashing (security):
+#    environment:
+#      - SQUASH_MODE=Root_Squash
+
+# Usage:
+#
+# Start:
+#   docker-compose up -d
+#
+# View logs:
+#   docker-compose logs -f
+#
+# Stop:
+#   docker-compose down
+#
+# Mount from client:
+#   mount -t nfs4 -o vers=4.1 localhost:/ /mnt/nfs
