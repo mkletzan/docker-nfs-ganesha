@@ -2,13 +2,15 @@ services:
   nfs-ganesha:
     build:
       context: ..
-    # Minimal capabilities for file operations
+    # Minimal capabilities required for NFS operations
     cap_add:
       - DAC_OVERRIDE
       - DAC_READ_SEARCH
     environment:
       - EXPORT_PATH=/data/nfs
-      - VERBOSITY=NIV_DEBUG
+      - VERBOSITY=NIV_EVENT
+      # For testing: disable root squashing (production should use Root_Squash)
+      - SQUASH_MODE=No_Root_Squash
     volumes:
       - nfs-data:/data/nfs
     networks:
@@ -18,8 +20,10 @@ services:
     image: quay.io/centos/centos:stream10
     depends_on:
       - nfs-ganesha
-    # Client might need privileges for NFS mount
+    # Temporarily back to privileged to debug
     privileged: true
+    # cap_add:
+    #   - SYS_ADMIN
     volumes:
       - ./run-tests.sh:/run-tests.sh:ro
     networks:
