@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nfs-ganesha:
-    image: ghcr.io/USER/nfs-ganesha:latest
+    image: ghcr.io/mkletzan/docker-nfs-ganesha:latest
     container_name: nfs-server
 
     # Minimal capabilities - NFS-Ganesha doesn't need privileged mode

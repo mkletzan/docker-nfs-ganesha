@@ -7,13 +7,71 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned for v1.0.0
-- Migrate to CentOS Stream 10 base image
-- Update NFS-Ganesha to version 5.x
-- NFSv4.2 support (expected fix)
-- Modern package versions
-- Enhanced security scanning
+## [1.0.0] - 2026-04-08
+
+### Major Release: CentOS Stream 10 Migration
+
+**Breaking Changes:**
+- Base image: CentOS 7 → CentOS Stream 10
+- NFS-Ganesha: 3.0 → 6.5 (LTS)
+- Tini: v0.18.0 → v0.19.0
+- Security: TCP-only transport by default (UDP disabled)
+
+### Added
 - CI/CD automation with GitHub Actions
+- Multi-architecture support (amd64, arm64, s390x)
+- Multi-stage Docker build for smaller images
+- GPG verification of Tini binary
+- Comprehensive CI/CD documentation
+- Automated publishing to ghcr.io on version tags
+
+### Changed
+- Migrated to CentOS Stream 10 base image
+- Updated NFS-Ganesha to 6.5 (stable LTS version)
+- Security hardening: TCP-only by default, root squashing enabled
+- Minimal dependencies: Only essential runtime packages
+- Image optimization: 750MB → 627MB (16% reduction)
+- Updated all documentation with correct repository URLs
+
+### Fixed
+- Repository metalink 404 errors (direct buildlogs.centos.org mirror)
+- Healthcheck now uses `rpcinfo` instead of `showmount`
+
+### Technical Details
+- Base image: `quay.io/centos/centos:stream10`
+- NFS-Ganesha: 6.5 (centos-release-nfs-ganesha6)
+- Tini: v0.19.0 (GPG verified)
+- Image size: ~627MB
+- Runtime packages: nfs-ganesha, nfs-ganesha-vfs, rpcbind
+- Build-only packages: gnupg2 (multi-stage build)
+
+### Security
+- TCP-only transport (UDP disabled by default)
+- Root squashing enabled by default
+- Minimal capabilities required (DAC_OVERRIDE, DAC_READ_SEARCH)
+- No weak dependencies installed
+- Multi-stage build isolates build-time dependencies
+
+### Known Issues
+- NFSv4.2 support: Not yet tested (was broken in v0.1.x)
+  - Will be verified in subsequent patch release
+
+## [0.1.2] - 2026-04-08
+
+### Added
+- Comprehensive documentation (README, CHANGELOG, examples)
+- Kubernetes deployment examples (Deployment, StatefulSet, DaemonSet)
+- Docker Compose production example
+- Architecture documentation
+- Environment variable reference
+
+## [0.1.1] - 2026-04-08
+
+### Added
+- Testing foundation and build infrastructure
+- Functional tests with NFSv4.1
+- Makefile for build/test automation
+- Multi-container test setup with docker-compose
 
 ## [0.1.0] - 2026-04-07
 
@@ -82,7 +140,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    ```
 3. **Pull new image:**
    ```bash
-   docker pull ghcr.io/USER/nfs-ganesha:1.0.0
+   docker pull ghcr.io/mkletzan/docker-nfs-ganesha:1.0.0
    ```
 4. **Start new container** with same configuration:
    ```bash
@@ -94,7 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
      -p 2049:2049 \
      -p 111:111 \
      -p 111:111/udp \
-     ghcr.io/USER/nfs-ganesha:1.0.0
+     ghcr.io/mkletzan/docker-nfs-ganesha:1.0.0
    ```
 5. **Verify mount** from clients
 
@@ -106,11 +164,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Links
 
-- [GitHub Repository](https://github.com/USER/nfs-ganesha)
-- [Container Registry](https://github.com/USER/nfs-ganesha/pkgs/container/nfs-ganesha)
-- [Issue Tracker](https://github.com/USER/nfs-ganesha/issues)
+- [GitHub Repository](https://github.com/mkletzan/docker-nfs-ganesha)
+- [Container Registry](https://github.com/mkletzan/docker-nfs-ganesha/pkgs/container/nfs-ganesha)
+- [Issue Tracker](https://github.com/mkletzan/docker-nfs-ganesha/issues)
 - [NFS-Ganesha Upstream](https://github.com/nfs-ganesha/nfs-ganesha)
-
----
-
-**Note:** Replace `USER` with actual GitHub username.

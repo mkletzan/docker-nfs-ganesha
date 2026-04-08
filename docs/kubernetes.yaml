@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
       - name: nfs-ganesha
-        image: ghcr.io/USER/nfs-ganesha:latest
+        image: ghcr.io/mkletzan/docker-nfs-ganesha:latest
         imagePullPolicy: Always
 
         # Minimal capabilities (no privileged mode needed)
@@ -219,7 +219,7 @@ spec:
     spec:
       containers:
       - name: nfs-ganesha
-        image: ghcr.io/USER/nfs-ganesha:latest
+        image: ghcr.io/mkletzan/docker-nfs-ganesha:latest
         imagePullPolicy: Always
 
         securityContext:
@@ -310,7 +310,7 @@ spec:
 
       containers:
       - name: nfs-ganesha
-        image: ghcr.io/USER/nfs-ganesha:latest
+        image: ghcr.io/mkletzan/docker-nfs-ganesha:latest
         imagePullPolicy: Always
 
         securityContext:
@@ -387,7 +387,7 @@ spec:
 
   containers:
   - name: nfs-ganesha
-    image: ghcr.io/USER/nfs-ganesha:latest
+    image: ghcr.io/mkletzan/docker-nfs-ganesha:latest
 
     securityContext:
       # Container-level security context
@@ -433,7 +433,6 @@ spec:
 ---
 # Notes:
 #
-# - Replace USER with your GitHub username in image references
 # - Adjust storage size in volumeClaimTemplates as needed
 # - For production, use specific image tags (not :latest)
 # - Configure resource limits/requests based on your workload

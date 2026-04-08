@@ -1,7 +1,7 @@
 # NFS-Ganesha Docker Container
 
-[![CI/CD](https://github.com/USER/nfs-ganesha/workflows/CI/badge.svg)](https://github.com/USER/nfs-ganesha/actions)
-[![Container](https://ghcr-badge.egpl.dev/USER/nfs-ganesha/latest_tag?color=%2344cc11&ignore=latest&label=version&trim=)](https://github.com/USER/nfs-ganesha/pkgs/container/nfs-ganesha)
+[![Build and Publish Release](https://github.com/mkletzan/docker-nfs-ganesha/workflows/Build%20and%20Publish%20Release/badge.svg)](https://github.com/mkletzan/docker-nfs-ganesha/actions)
+[![Container](https://ghcr-badge.egpl.dev/mkletzan/docker-nfs-ganesha/latest_tag?color=%2344cc11&ignore=latest&label=version&trim=)](https://github.com/mkletzan/docker-nfs-ganesha/pkgs/container/nfs-ganesha)
 
 Containerized [NFS-Ganesha](https://github.com/nfs-ganesha/nfs-ganesha) server - a user-space NFS server implementation.
 
@@ -28,7 +28,7 @@ docker run -d \
   -p 2049:2049 \
   -p 111:111 \
   -p 111:111/udp \
-  ghcr.io/USER/nfs-ganesha:latest
+  ghcr.io/mkletzan/docker-nfs-ganesha:latest
 ```
 
 ### Podman
@@ -42,13 +42,13 @@ podman run -d \
   -p 2049:2049 \
   -p 111:111 \
   -p 111:111/udp \
-  ghcr.io/USER/nfs-ganesha:latest
+  ghcr.io/mkletzan/docker-nfs-ganesha:latest
 ```
 
 ### Kubernetes
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/USER/nfs-ganesha/main/docs/kubernetes.yaml
+kubectl apply -f https://raw.githubusercontent.com/mkletzan/docker-nfs-ganesha/main/docs/kubernetes.yaml
 ```
 
 See [docs/kubernetes.yaml](docs/kubernetes.yaml) for full example.
@@ -80,7 +80,7 @@ docker run -d \
   -e VERBOSITY=NIV_DEBUG \
   -v /my/data:/exports \
   -p 2049:2049 \
-  ghcr.io/USER/nfs-ganesha:latest
+  ghcr.io/mkletzan/docker-nfs-ganesha:latest
 ```
 
 ## Mounting from Clients
@@ -176,7 +176,7 @@ spec:
     spec:
       containers:
       - name: nfs-ganesha
-        image: ghcr.io/USER/nfs-ganesha:latest
+        image: ghcr.io/mkletzan/docker-nfs-ganesha:latest
         securityContext:
           capabilities:
             add:
@@ -213,7 +213,7 @@ See [docs/kubernetes.yaml](docs/kubernetes.yaml) for complete examples.
 
 ```bash
 # Clone repository
-git clone https://github.com/USER/nfs-ganesha.git
+git clone https://github.com/mkletzan/docker-nfs-ganesha.git
 cd nfs-ganesha
 
 # Install build dependencies (Fedora)
@@ -346,7 +346,7 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 ### Vulnerability Scanning
 
 All images are scanned with [Anchore Grype](https://github.com/anchore/grype):
-- Scan results in [GitHub Security](https://github.com/USER/nfs-ganesha/security)
+- Scan results in [GitHub Security](https://github.com/mkletzan/docker-nfs-ganesha/security)
 - SBOM generated with [Syft](https://github.com/anchore/syft)
 - Weekly automated rebuilds
 
@@ -360,7 +360,7 @@ This container requires minimal Linux capabilities:
 
 ### Reporting Vulnerabilities
 
-Report security issues via [GitHub Security Advisories](https://github.com/USER/nfs-ganesha/security/advisories).
+Report security issues via [GitHub Security Advisories](https://github.com/mkletzan/docker-nfs-ganesha/security/advisories).
 
 ## Contributing
 
