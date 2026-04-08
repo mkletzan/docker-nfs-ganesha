@@ -1,6 +1,6 @@
 # NFS-Ganesha Docker Container
 
-[![Build and Publish Release](https://github.com/mkletzan/docker-nfs-ganesha/workflows/Build%20and%20Publish%20Release/badge.svg)](https://github.com/mkletzan/docker-nfs-ganesha/actions)
+[![Test](https://github.com/mkletzan/docker-nfs-ganesha/workflows/Test/badge.svg)](https://github.com/mkletzan/docker-nfs-ganesha/actions)
 [![Container](https://ghcr-badge.egpl.dev/mkletzan/docker-nfs-ganesha/latest_tag?color=%2344cc11&ignore=latest&label=version&trim=)](https://github.com/mkletzan/docker-nfs-ganesha/pkgs/container/nfs-ganesha)
 
 Containerized [NFS-Ganesha](https://github.com/nfs-ganesha/nfs-ganesha) server - a user-space NFS server implementation.

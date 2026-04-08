@@ -1,4 +1,4 @@
-name: Build and Publish Release
+name: Release
 
 on:
   push:
@@ -24,6 +24,7 @@ jobs:
     name: Build and Push Multi-arch Image
     runs-on: ubuntu-latest
     needs: test
+    environment: production
     permissions:
       contents: read
       packages: write
