@@ -3,6 +3,9 @@
 IMAGE_NAME ?= nfs-ganesha
 IMAGE_TAG ?= latest
 
+# Detect docker compose command (plugin vs standalone)
+DOCKER_COMPOSE := $(shell docker compose version >/dev/null 2>&1 && echo "docker compose" || echo "docker-compose")
+
 # Install build dependencies
 install-build-deps:
 	@echo "Checking build dependencies..."
@@ -37,22 +40,22 @@ build:
 
 test: build
 	@echo "Running tests..."
-	@docker-compose -f tests/docker-compose.test.yml up -d --build >/dev/null 2>&1
-	@docker-compose -f tests/docker-compose.test.yml logs -f test-runner
-	@CONTAINER_ID=$$(docker-compose -f tests/docker-compose.test.yml ps -aq test-runner); \
+	@$(DOCKER_COMPOSE) -f tests/docker-compose.test.yml up -d --build >/dev/null 2>&1
+	@$(DOCKER_COMPOSE) -f tests/docker-compose.test.yml logs -f test-runner
+	@CONTAINER_ID=$$($(DOCKER_COMPOSE) -f tests/docker-compose.test.yml ps -aq test-runner); \
 	EXIT_CODE=$$(docker inspect -f '{{.State.ExitCode}}' $$CONTAINER_ID 2>/dev/null || echo 1); \
-	docker-compose -f tests/docker-compose.test.yml down -v >/dev/null 2>&1; \
+	$(DOCKER_COMPOSE) -f tests/docker-compose.test.yml down -v >/dev/null 2>&1; \
 	exit $$EXIT_CODE
 
 test-verbose: build
-	docker-compose -f tests/docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from test-runner
-	docker-compose -f tests/docker-compose.test.yml down -v
+	$(DOCKER_COMPOSE) -f tests/docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from test-runner
+	$(DOCKER_COMPOSE) -f tests/docker-compose.test.yml down -v
 
 # Clean up all Docker resources related to this project
 clean:
 	@echo "Cleaning up Docker resources for $(IMAGE_NAME)..."
 	@echo "→ Stopping and removing test containers and volumes..."
-	@docker-compose -f tests/docker-compose.test.yml down -v 2>/dev/null || true
+	@$(DOCKER_COMPOSE) -f tests/docker-compose.test.yml down -v 2>/dev/null || true
 	@echo "→ Removing Docker images..."
 	@docker rmi $(IMAGE_NAME):$(IMAGE_TAG) 2>/dev/null || true
 	@docker rmi tests-nfs-ganesha 2>/dev/null || true
