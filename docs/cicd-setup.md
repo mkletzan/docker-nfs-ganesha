@@ -6,9 +6,11 @@ This document explains how to set up the automated build and publish workflow fo
 
 The CI/CD pipeline automatically:
 1. Runs the full test suite
-2. Builds multi-architecture container images (amd64, arm64, s390x)
+2. Builds multi-architecture container images (amd64, arm64)
 3. Publishes to GitHub Container Registry (ghcr.io)
 4. Tags images with semantic versioning
+
+**Note:** s390x is not supported due to lack of nfs-ganesha-6 packages for CentOS Stream 10.
 
 **Triggers:** Push to version tags (e.g., `v1.0.0`, `v1.0.1`)
 
@@ -67,7 +69,9 @@ When you push tag `v1.2.3`, the workflow creates these image tags:
 
 - `linux/amd64` (x86_64)
 - `linux/arm64` (ARM 64-bit)
-- `linux/s390x` (IBM Z)
+
+**Not supported:**
+- `linux/s390x` (IBM Z) - nfs-ganesha-6 packages unavailable for CentOS Stream 10
 
 ## Publishing a Release
 
@@ -144,7 +148,7 @@ If the package is private, create a Personal Access Token (PAT):
 
 ### Multi-arch Build Takes Too Long
 
-**Expected:** Multi-arch builds (especially s390x emulation) can take 20-30 minutes.
+**Expected:** Multi-arch builds (especially arm64 emulation) can take 15-20 minutes.
 
 **Optimization:** GitHub Actions provides build cache (`type=gha`) which speeds up subsequent builds.
 
@@ -184,7 +188,7 @@ docker buildx create --name multiarch --use
 
 # Build for all platforms
 docker buildx build \
-  --platform linux/amd64,linux/arm64,linux/s390x \
+  --platform linux/amd64,linux/arm64 \
   -t ghcr.io/mkletzan/docker-nfs-ganesha:test \
   --load \
   .
