@@ -7,19 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-04-09
+
 ### Added
-- Multi-architecture testing in CI/CD (amd64, arm64)
+- Multi-architecture testing in CI/CD for both push and pull requests
 - Architecture-specific testing support in Makefile (ARCH parameter)
 - test-multiarch target for local multi-architecture testing
+- CODEOWNERS file requiring review for workflow changes
+- Production environment gate for manual release approval
 - Improved dependency checking (reports missing packages without sudo)
 
 ### Changed
-- Test workflow runs multi-arch tests on pull requests
+- Separated test and release workflows for better security
+- Test workflow runs multi-arch tests on all pushes to master and PRs
 - Release workflow tests all architectures before publishing
 - install-* targets now only check and report (no automatic sudo installs)
+- Fixed duplicate test runs on pull requests
 
-### Known Issues
-- s390x architecture not supported (nfs-ganesha-6 packages unavailable for s390x on CentOS Stream 10)
+### Fixed
+- s390x removed from build targets (packages unavailable on CentOS Stream 10)
+- Makefile now auto-detects docker compose vs docker-compose command
+- Test workflow no longer triggers duplicate runs on PR branches
 
 ## [1.0.0] - 2026-04-08
 
