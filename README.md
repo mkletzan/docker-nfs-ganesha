@@ -389,7 +389,3 @@ See [tests/README.md](tests/README.md) for testing guidelines.
 - Built for [kubevirtci](https://github.com/kubevirt/kubevirtci)
 - Powered by [NFS-Ganesha](https://nfs-ganesha.github.io/)
 - Container maintained by the community
-
----
-
-**Note:** Remember to replace `USER` with your actual GitHub username in all URLs and image references.
