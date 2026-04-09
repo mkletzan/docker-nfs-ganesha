@@ -163,7 +163,7 @@ Then verify the configuration is applied correctly in your test script.
 
 ## CI/CD
 
-These tests run automatically in GitHub Actions on every pull request. See `.github/workflows/ci.yml` for the CI configuration.
+These tests run automatically in GitHub Actions on every push and pull request. See `.github/workflows/test.yml` for the CI configuration.
 
 ## License
 
