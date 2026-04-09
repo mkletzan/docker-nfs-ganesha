@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Multi-architecture testing in CI/CD (amd64, arm64)
+- Architecture-specific testing support in Makefile (ARCH parameter)
+- test-multiarch target for local multi-architecture testing
+- Improved dependency checking (reports missing packages without sudo)
+
+### Changed
+- Test workflow runs multi-arch tests on pull requests
+- Release workflow tests all architectures before publishing
+- install-* targets now only check and report (no automatic sudo installs)
+
+### Known Issues
+- s390x architecture not supported (nfs-ganesha-6 packages unavailable for s390x on CentOS Stream 10)
+
 ## [1.0.0] - 2026-04-08
 
 ### Major Release: CentOS Stream 10 Migration
@@ -19,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - CI/CD automation with GitHub Actions
-- Multi-architecture support (amd64, arm64, s390x)
+- Multi-architecture support (amd64, arm64)
 - Multi-stage Docker build for smaller images
 - GPG verification of Tini binary
 - Comprehensive CI/CD documentation
