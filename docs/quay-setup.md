@@ -241,46 +241,82 @@ docker pull quay.io/<your-quay-username>/<your-quay-repo>:latest
 
 ## Testing the Setup
 
-Before pushing a real release, test the setup:
+Before pushing a real release, test the setup. There are two ways:
+
+### Method 1: Manual Workflow Trigger (Recommended)
+
+The easiest way to test without creating tags:
 
 1. **Verify secrets are set:**
+   - Go to GitHub repository Settings → Secrets and variables → Actions
+   - Confirm both `QUAY_IO_USERNAME` and `QUAY_IO_TOKEN` exist
+
+2. **Trigger workflow manually:**
+   - Go to GitHub repository → **Actions** tab
+   - Click **"Release"** workflow in left sidebar
+   - Click **"Run workflow"** button (top right)
+   - Enter tag name: `test` (or any name like `test-quay`)
+   - Click **"Run workflow"**
+
+3. **Monitor workflow:**
+   - Watch the workflow run in real-time
+   - Check both login steps succeed (GitHub and Quay.io)
+   - Verify build and push completes to both registries
+
+4. **Verify images exist:**
    ```bash
-   # In GitHub repository settings, you should see:
-   # - QUAY_IO_USERNAME
-   # - QUAY_IO_TOKEN
+   # Check GitHub Container Registry
+   docker pull ghcr.io/<your-github-username>/<your-repo>:test
+   
+   # Check Quay.io
+   docker pull quay.io/<your-quay-username>/<your-quay-repo>:test
    ```
 
-2. **Test authentication locally (optional):**
-   ```bash
-   docker login quay.io
-   Username: <your-quay-username>+<robot-name>
-   Password: <paste-robot-token>
-   # Should see: Login Succeeded
-   ```
+5. **Check security scans:**
+   - GitHub: Security → Code scanning
+   - Quay.io: Repository → `test` tag → Security Scan
 
-3. **Push a test tag:**
+6. **Clean up test images (optional):**
+   - GitHub: Packages → Select package → Delete tag `test`
+   - Quay.io: Repository → Tags → Delete `test` tag
+
+### Method 2: Test Tag
+
+Alternatively, push a test tag:
+
+1. **Create and push test tag:**
    ```bash
    git tag -a v1.0.3-test -m "Test Quay.io integration"
    git push origin v1.0.3-test
    ```
 
-4. **Monitor workflow:**
-   - Watch GitHub Actions workflow run
-   - Check both login steps succeed
-   - Verify build and push completes
+2. **Monitor and verify** (same as Method 1, steps 3-5)
 
-5. **Verify images exist:**
+3. **Clean up:**
    ```bash
-   # Check GitHub Container Registry
-   docker pull ghcr.io/<your-github-username>/<your-repo>:1.0.3-test
+   # Delete local tag
+   git tag -d v1.0.3-test
    
-   # Check Quay.io
-   docker pull quay.io/<your-quay-username>/<your-quay-repo>:1.0.3-test
+   # Delete remote tag
+   git push --delete origin v1.0.3-test
    ```
 
-6. **Check security scans:**
-   - GitHub: Security → Code scanning
-   - Quay.io: Repository → Tag → Security Scan
+### Method 3: Local Test (Quick Auth Check)
+
+Just test authentication without building:
+
+```bash
+# Test GitHub Container Registry login
+echo $GITHUB_TOKEN | docker login ghcr.io -u <your-github-username> --password-stdin
+
+# Test Quay.io login
+docker login quay.io
+Username: <your-quay-username>+<robot-name>
+Password: <paste-robot-token>
+# Should see: Login Succeeded for both
+```
+
+**Recommendation**: Use Method 1 (manual trigger) as it's cleanest and doesn't create git tags.
 
 ## Security Best Practices
 
