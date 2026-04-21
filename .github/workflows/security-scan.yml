@@ -1,0 +1,71 @@
+name: Security Scan
+
+on:
+  workflow_call:
+    inputs:
+      image-ref:
+        description: 'Docker image reference to scan (e.g., nfs-ganesha:scan or registry/image:tag)'
+        required: true
+        type: string
+      artifact-name:
+        description: 'Name for the SBOM artifact'
+        required: false
+        type: string
+        default: 'sbom-spdx'
+      severity-cutoff:
+        description: 'Minimum severity to report (negligible, low, medium, high, critical)'
+        required: false
+        type: string
+        default: 'medium'
+      fail-build:
+        description: 'Whether to fail the build on vulnerabilities'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Download image artifact
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: docker-image
+          path: /tmp
+
+      - name: Load Docker image
+        run: docker load -i /tmp/image.tar
+
+      - name: Generate SBOM with Syft
+        uses: anchore/sbom-action@fc46e51fd79e9f64346f67ac03efbdacfa01a52f # v0.18.2
+        with:
+          image: ${{ inputs.image-ref }}
+          artifact-name: sbom.spdx.json
+          output-file: sbom.spdx.json
+
+      - name: Scan for vulnerabilities with Grype
+        uses: anchore/scan-action@fc46e51fd79e9f64346f67ac03efbdacfa01a52f # v5.2.2
+        id: scan
+        with:
+          image: ${{ inputs.image-ref }}
+          fail-build: ${{ inputs.fail-build }}
+          severity-cutoff: ${{ inputs.severity-cutoff }}
+          output-format: sarif
+
+      - name: Upload vulnerability results to GitHub Security
+        uses: github/codeql-action/upload-sarif@48d0c3a8a3451aa91e883f4df451bf0ec29c3165 # v3.29.0
+        if: always()
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+
+      - name: Upload SBOM as artifact
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        if: always()
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: sbom.spdx.json
+          retention-days: 90

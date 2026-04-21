@@ -156,19 +156,42 @@ If the package is private, create a Personal Access Token (PAT):
 
 ### Image Scanning
 
-The workflow does not include security scanning yet. To add:
+All container images are automatically scanned for vulnerabilities using:
+- **Syft** - Generates Software Bill of Materials (SBOM) in SPDX format
+- **Grype** - Scans for known vulnerabilities (CVEs)
 
-1. Use `anchore/scan-action` (requires separate workflow)
-2. Use `github/codeql-action` for SBOM generation
-3. Upload results to GitHub Security tab
+#### Scanning Schedule
 
-Example (not included in current workflow):
-```yaml
-- name: Scan image
-  uses: anchore/scan-action@v3
-  with:
-    image: ghcr.io/mkletzan/docker-nfs-ganesha:${{ steps.meta.outputs.version }}
-```
+Security scans run:
+- On every pull request (test workflow)
+- On every push to master branch (test workflow)
+- On every release tag (release workflow)
+
+#### Where to Find Results
+
+**Vulnerability Scan Results:**
+1. Go to your repository on GitHub
+2. Click the **"Security"** tab
+3. Click **"Code scanning"** in the left sidebar
+4. View Grype vulnerability findings
+
+Direct link: `https://github.com/mkletzan/docker-nfs-ganesha/security/code-scanning`
+
+**SBOM (Software Bill of Materials):**
+1. Go to the **"Actions"** tab
+2. Click on a workflow run (Test or Release)
+3. Scroll to **"Artifacts"** section
+4. Download the `sbom-spdx` artifact
+
+The SBOM is a JSON file listing all software components and their versions in the container image.
+
+#### Severity Cutoff
+
+Current configuration:
+- **Severity cutoff**: Medium (reports medium, high, and critical vulnerabilities)
+- **Fail build**: No (vulnerabilities are reported but don't block builds)
+
+To make builds fail on vulnerabilities, edit `.github/workflows/security-scan.yml` and set `fail-build: true`.
 
 ### Secrets
 
