@@ -28,3 +28,45 @@ jobs:
 
       - name: Run tests
         run: ARCH=${{ matrix.arch }} make test-verbose
+
+  build-for-scan:
+    name: Build Image for Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+
+      - name: Build image for scanning
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
+        with:
+          context: .
+          load: true
+          tags: nfs-ganesha:scan
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Export image as tarball
+        run: docker save nfs-ganesha:scan -o /tmp/image.tar
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: docker-image
+          path: /tmp/image.tar
+          retention-days: 1
+
+  security-scan:
+    name: Security Scan
+    needs: build-for-scan
+    uses: ./.github/workflows/security-scan.yml
+    permissions:
+      contents: read
+      security-events: write
+    with:
+      image-ref: nfs-ganesha:scan
+      artifact-name: sbom-spdx
+      severity-cutoff: medium
+      fail-build: false

@@ -78,3 +78,38 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  prepare-scan:
+    name: Prepare Image for Security Scan
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Extract version tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Pull and export published image
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }} nfs-ganesha:scan
+          docker save nfs-ganesha:scan -o /tmp/image.tar
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        with:
+          name: docker-image
+          path: /tmp/image.tar
+          retention-days: 1
+
+  security-scan:
+    name: Security Scan
+    needs: prepare-scan
+    uses: ./.github/workflows/security-scan.yml
+    permissions:
+      contents: read
+      security-events: write
+    with:
+      image-ref: nfs-ganesha:scan
+      artifact-name: sbom-spdx-release
+      severity-cutoff: medium
+      fail-build: false

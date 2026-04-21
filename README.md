@@ -345,10 +345,16 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ### Vulnerability Scanning
 
-All images are scanned with [Anchore Grype](https://github.com/anchore/grype):
-- Scan results in [GitHub Security](https://github.com/mkletzan/docker-nfs-ganesha/security)
-- SBOM generated with [Syft](https://github.com/anchore/syft)
-- Weekly automated rebuilds
+All images are automatically scanned for vulnerabilities using:
+- **[Anchore Grype](https://github.com/anchore/grype)** - Vulnerability scanner
+- **[Syft](https://github.com/anchore/syft)** - SBOM (Software Bill of Materials) generator
+
+**Where to find security information:**
+- **Vulnerability Reports**: [Security → Code Scanning](https://github.com/mkletzan/docker-nfs-ganesha/security/code-scanning)
+- **SBOM Artifacts**: [Actions](https://github.com/mkletzan/docker-nfs-ganesha/actions) → Select workflow run → Download `sbom-spdx` artifact
+- **Scanning Frequency**: Every PR, every push to master, and every release
+
+See [docs/security-scanning.md](docs/security-scanning.md) for complete details on how security scanning works and how to interpret results.
 
 ### Required Capabilities
 
