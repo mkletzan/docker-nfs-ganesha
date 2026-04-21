@@ -49,9 +49,20 @@ uses: owner/action@<40-char-sha> # vX.Y.Z
 
 **Finding correct SHAs**:
 1. Go to the action's GitHub repository
-2. Navigate to the Releases page
+2. Navigate to the Releases page or Tags page
 3. Click on the version tag
 4. Copy the commit SHA from the URL or commit details
+
+**Checking for newer versions**:
+1. Visit the action's repository Tags page:
+   - `https://github.com/actions/checkout/tags`
+   - `https://github.com/docker/build-push-action/tags`
+2. Find the latest tag (highest version number)
+3. Click on the tag to see the commit details
+4. Copy the full 40-character commit SHA
+5. Update workflows and this documentation
+
+**Update frequency**: Check quarterly or when security issues are discovered
 
 Example:
 - ❌ `uses: actions/checkout@v4`
@@ -60,8 +71,8 @@ Example:
 
 **Verified action versions (as of 2026-04-21)**:
 - actions/checkout: `de0fac2e4500dabe0009e67214ff5f5447ce83dd` (v6.0.2)
-- actions/upload-artifact: `ea165f8d65b6e75b540449e92b4886f43607fa02` (v4.6.2)
-- actions/download-artifact: `d3f86a106a0bac45b974a628896c90dbdf5c8093` (v4.3.0)
+- actions/upload-artifact: `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a` (v7.0.1)
+- actions/download-artifact: `3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c` (v8.0.1)
 - docker/build-push-action: `bcafcacb16a39f128d818304e6c9c0c18556b85f` (v7.1.0)
 - docker/setup-qemu-action: `ce360397dd3f832beb865e1373c09c0e9f86d70a` (v4.0.0)
 - docker/setup-buildx-action: `4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd` (v4.0.0)
