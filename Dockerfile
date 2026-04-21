@@ -6,7 +6,8 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc /tini.asc
 
 # Install gnupg2 only in build stage for verification (no weak deps)
-RUN dnf install -y --setopt=install_weak_deps=False gnupg2 && \
+RUN dnf update -y && \
+    dnf install -y --setopt=install_weak_deps=False gnupg2 && \
     set -x && \
     export GNUPGHOME="$(mktemp -d)" && \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 && \
@@ -36,6 +37,8 @@ RUN dnf install -y epel-release && \
     # Fix broken metalink - use buildlogs mirror directly
     sed -i 's|^metalink=.*|baseurl=https://buildlogs.centos.org/centos/$stream/storage/$basearch/nfsganesha-6/|' /etc/yum.repos.d/CentOS-NFS-Ganesha-6.repo && \
     sed -i '/^metalink=/d' /etc/yum.repos.d/CentOS-NFS-Ganesha-6.repo && \
+    # Update all packages to latest versions (security patches)
+    dnf update -y && \
     # Install only runtime dependencies (minimal set, no weak dependencies)
     dnf install -y --setopt=install_weak_deps=False \
         nfs-ganesha \

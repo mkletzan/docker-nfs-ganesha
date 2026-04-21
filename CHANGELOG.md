@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Test workflow includes dedicated security scan job
 - Documentation updated to reflect v1.0.1 as current version
 - NFSv4.2 marked as supported (available since v1.0.0)
+- Dockerfile now updates all packages to latest versions during build (security patches)
 
 ## [1.0.1] - 2026-04-09
 
