@@ -31,6 +31,19 @@ docker run -d \
   ghcr.io/mkletzan/docker-nfs-ganesha:latest
 ```
 
+Or from Quay.io:
+```bash
+docker run -d \
+  --name nfs-server \
+  --cap-add DAC_OVERRIDE \
+  --cap-add DAC_READ_SEARCH \
+  -v /path/to/data:/data/nfs \
+  -p 2049:2049 \
+  -p 111:111 \
+  -p 111:111/udp \
+  quay.io/nertpinx/nfs-ganesha:latest
+```
+
 ### Podman
 
 ```bash
@@ -43,6 +56,19 @@ podman run -d \
   -p 111:111 \
   -p 111:111/udp \
   ghcr.io/mkletzan/docker-nfs-ganesha:latest
+```
+
+Or from Quay.io:
+```bash
+podman run -d \
+  --name nfs-server \
+  --cap-add DAC_OVERRIDE \
+  --cap-add DAC_READ_SEARCH \
+  -v /path/to/data:/data/nfs:z \
+  -p 2049:2049 \
+  -p 111:111 \
+  -p 111:111/udp \
+  quay.io/nertpinx/nfs-ganesha:latest
 ```
 
 ### Kubernetes

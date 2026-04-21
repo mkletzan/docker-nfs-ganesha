@@ -8,7 +8,9 @@ The CI/CD pipeline automatically:
 1. Runs the full test suite
 2. Builds multi-architecture container images (amd64, arm64)
 3. Publishes to GitHub Container Registry (ghcr.io)
-4. Tags images with semantic versioning
+4. Publishes to Quay.io Container Registry (quay.io)
+5. Tags images with semantic versioning
+6. Runs security scans with Syft/Grype
 
 **Note:** s390x is not supported due to lack of nfs-ganesha-6 packages for CentOS Stream 10.
 
@@ -54,16 +56,25 @@ The workflow consists of two jobs:
   2. Set up QEMU (for cross-platform emulation)
   3. Set up Docker Buildx (for multi-arch builds)
   4. Login to ghcr.io using `GITHUB_TOKEN`
-  5. Extract metadata (tags, labels)
-  6. Build and push multi-arch images
+  5. Login to quay.io using robot account credentials
+  6. Extract metadata (tags, labels)
+  7. Build and push multi-arch images to both registries
 
 ### Image Tags
 
-When you push tag `v1.2.3`, the workflow creates these image tags:
+When you push tag `v1.2.3`, the workflow creates these image tags on both registries:
+
+**GitHub Container Registry:**
 - `ghcr.io/mkletzan/docker-nfs-ganesha:1.2.3`
 - `ghcr.io/mkletzan/docker-nfs-ganesha:1.2`
 - `ghcr.io/mkletzan/docker-nfs-ganesha:1`
 - `ghcr.io/mkletzan/docker-nfs-ganesha:latest` (only if on default branch)
+
+**Quay.io:**
+- `quay.io/nertpinx/nfs-ganesha:1.2.3`
+- `quay.io/nertpinx/nfs-ganesha:1.2`
+- `quay.io/nertpinx/nfs-ganesha:1`
+- `quay.io/nertpinx/nfs-ganesha:latest` (only if on default branch)
 
 ### Supported Architectures
 
@@ -112,7 +123,11 @@ No setup required. The workflow uses `GITHUB_TOKEN` which is automatically provi
 
 No authentication needed for public images:
 ```bash
+# From GitHub Container Registry
 docker pull ghcr.io/mkletzan/docker-nfs-ganesha:latest
+
+# From Quay.io
+docker pull quay.io/nertpinx/nfs-ganesha:latest
 ```
 
 ### For Local Pulling (Private Images)
@@ -195,11 +210,25 @@ To make builds fail on vulnerabilities, edit `.github/workflows/security-scan.ym
 
 ### Secrets
 
-The workflow only uses `GITHUB_TOKEN`:
+The workflow uses these secrets:
+
+**`GITHUB_TOKEN`** (automatic):
 - Automatically provided by GitHub Actions
+- Used for ghcr.io authentication
 - Scoped to the repository
-- No manual secret management needed
-- Cannot be used outside GitHub Actions context
+- No manual configuration needed
+
+**`QUAY_IO_USERNAME`** (manual):
+- Quay.io robot account username
+- Format: `<quay-username>+<robot-name>`
+- Must be added in GitHub Settings → Secrets
+
+**`QUAY_IO_TOKEN`** (manual):
+- Quay.io robot account token
+- Generated when creating robot account
+- Must be added in GitHub Settings → Secrets
+
+For Quay.io setup instructions, see [docs/quay-setup.md](quay-setup.md).
 
 ## Local Multi-arch Builds
 

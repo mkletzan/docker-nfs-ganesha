@@ -124,6 +124,25 @@ This is documented in:
 - Automatically provided by GitHub Actions
 - No manual secret configuration needed
 
+### Quay.io Container Registry
+
+**Current registry**: `quay.io/nertpinx/nfs-ganesha`
+
+**Package visibility**: Public
+
+**Authentication**: Uses robot account
+- Secret name: `QUAY_IO_USERNAME`
+- Secret name: `QUAY_IO_TOKEN`
+- Set in: GitHub → Settings → Secrets and variables → Actions
+
+**Features**:
+- Server-side security scanning with Clair
+- Continuous vulnerability monitoring
+- Automatic rescanning when new CVEs published
+- Web UI for viewing scan results
+
+**Setup**: See [docs/quay-setup.md](docs/quay-setup.md) for complete configuration guide
+
 ### Image Tags
 
 Tag pattern for release `v1.2.3`:
