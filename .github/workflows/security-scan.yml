@@ -32,7 +32,7 @@ jobs:
       security-events: write
     steps:
       - name: Download image artifact
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: docker-image
           path: /tmp
@@ -41,14 +41,14 @@ jobs:
         run: docker load -i /tmp/image.tar
 
       - name: Generate SBOM with Syft
-        uses: anchore/sbom-action@fc46e51fd79e9f64346f67ac03efbdacfa01a52f # v0.18.2
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
         with:
           image: ${{ inputs.image-ref }}
           artifact-name: sbom.spdx.json
           output-file: sbom.spdx.json
 
       - name: Scan for vulnerabilities with Grype
-        uses: anchore/scan-action@fc46e51fd79e9f64346f67ac03efbdacfa01a52f # v5.2.2
+        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
         id: scan
         with:
           image: ${{ inputs.image-ref }}
@@ -57,13 +57,13 @@ jobs:
           output-format: sarif
 
       - name: Upload vulnerability results to GitHub Security
-        uses: github/codeql-action/upload-sarif@48d0c3a8a3451aa91e883f4df451bf0ec29c3165 # v3.29.0
+        uses: github/codeql-action/upload-sarif@ce64ddcb0d8d890d2df4a9d1c04ff297367dea2a # v3.35.2
         if: always()
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
 
       - name: Upload SBOM as artifact
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
           name: ${{ inputs.artifact-name }}
