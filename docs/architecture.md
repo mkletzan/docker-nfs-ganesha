@@ -435,19 +435,25 @@ docker logs -f nfs-server
 
 ## Limitations
 
-### Current (v0.1.0)
+### Current (v1.0.1)
 
-- ❌ NFSv4.2 not supported (I/O error on mount)
 - ❌ Single export per container
 - ❌ No Kerberos authentication
 - ❌ No pNFS (parallel NFS)
 - ❌ No NFS over RDMA
 
-### Planned (v1.0.0+)
+### Supported Since v1.0.0
 
-- ✅ NFSv4.2 support (expected with newer Ganesha)
+- ✅ NFSv4.2 support (NFS-Ganesha 6.5)
+- ✅ Multi-architecture (amd64, arm64)
+- ✅ CentOS Stream 10 base
+
+### Possible Future Enhancements
+
 - ⚠️ Multi-export (possible but complex)
 - ⚠️ Kerberos (requires KDC configuration)
+- ⚠️ pNFS support (if Ganesha configuration allows)
+- ⚠️ NFS over RDMA (requires specific hardware/kernel support)
 
 ## References
 

@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Automated security scanning with Syft (SBOM) and Grype (vulnerabilities)
+- Security scan results uploaded to GitHub Security → Code Scanning tab
+- SBOM artifacts available in GitHub Actions workflow runs (90-day retention)
+- Dual-registry support: images pushed to both ghcr.io and quay.io
+- Quay.io integration for server-side Clair security scanning
+- Continuous vulnerability monitoring via Quay.io (auto-rescans on new CVEs)
+- Manual workflow trigger for testing releases without creating tags
+- Comprehensive security scanning documentation (docs/security-scanning.md)
+- Quay.io setup guide for forks (docs/quay-setup.md)
+- CLAUDE.md project context documentation
+
+### Changed
+- Release workflow now pushes to both GitHub Container Registry and Quay.io
+- Security scanning runs on every PR, push to master, and release
+- Test workflow includes dedicated security scan job
+- Documentation updated to reflect v1.0.1 as current version
+- NFSv4.2 marked as supported (available since v1.0.0)
+
 ## [1.0.1] - 2026-04-09
 
 ### Added

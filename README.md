@@ -74,7 +74,7 @@ podman run -d \
 ### Kubernetes
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/mkletzan/docker-nfs-ganesha/main/docs/kubernetes.yaml
+kubectl apply -f https://raw.githubusercontent.com/mkletzan/docker-nfs-ganesha/master/docs/kubernetes.yaml
 ```
 
 See [docs/kubernetes.yaml](docs/kubernetes.yaml) for full example.
@@ -133,10 +133,8 @@ mount -t nfs4 -o vers=4.0 server-ip:/ /mnt/nfs
 |---------|--------|-------|
 | NFSv4.1 | ✅ Supported | **Recommended** - Best feature set |
 | NFSv4.0 | ✅ Supported | Works well |
-| NFSv4.2 | ❌ Not supported | Mount fails with I/O error (v0.1.0) |
+| NFSv4.2 | ✅ Supported | Available since v1.0.0 |
 | NFSv3 | ⚠️ Limited | Available but not recommended |
-
-**Note:** NFSv4.2 support is planned for v1.0.0 (CentOS Stream 10 migration).
 
 ## Networking
 
@@ -240,7 +238,7 @@ See [docs/kubernetes.yaml](docs/kubernetes.yaml) for complete examples.
 ```bash
 # Clone repository
 git clone https://github.com/mkletzan/docker-nfs-ganesha.git
-cd nfs-ganesha
+cd docker-nfs-ganesha
 
 # Install build dependencies (Fedora)
 make install-build-deps
@@ -351,34 +349,35 @@ This project uses [Semantic Versioning](https://semver.org/).
 - **v0.x.x** - Pre-release versions (CentOS 7 base)
 - **v1.x.x** - Stable releases (CentOS Stream 10+)
 
-### Current Version: v0.1.0
-
-- Base: CentOS 7
-- NFS-Ganesha: 3.0
-- NFSv4.1 and NFSv4.0 supported
-- NFSv4.2 not supported
-
-### Upcoming: v1.0.0
+### Current Version: v1.0.1
 
 - Base: CentOS Stream 10
-- NFS-Ganesha: Latest (5.x)
-- Expected: NFSv4.2 support
-- Modern packages and security updates
+- NFS-Ganesha: 6.5 (LTS)
+- NFSv4.0, NFSv4.1, and NFSv4.2 supported
+- Multi-architecture: amd64, arm64
+- Automated security scanning with Grype and Clair
+- Dual registry: ghcr.io and quay.io
 
-See [CHANGELOG.md](CHANGELOG.md) for version history.
+See [CHANGELOG.md](CHANGELOG.md) for full version history and migration guides.
 
 ## Security
 
 ### Vulnerability Scanning
 
-All images are automatically scanned for vulnerabilities using:
+All images are automatically scanned for vulnerabilities using multiple scanners:
+
+**GitHub Actions (CI/CD):**
 - **[Anchore Grype](https://github.com/anchore/grype)** - Vulnerability scanner
 - **[Syft](https://github.com/anchore/syft)** - SBOM (Software Bill of Materials) generator
+- Results: [Security → Code Scanning](https://github.com/mkletzan/docker-nfs-ganesha/security/code-scanning)
+- SBOM: [Actions](https://github.com/mkletzan/docker-nfs-ganesha/actions) artifacts
 
-**Where to find security information:**
-- **Vulnerability Reports**: [Security → Code Scanning](https://github.com/mkletzan/docker-nfs-ganesha/security/code-scanning)
-- **SBOM Artifacts**: [Actions](https://github.com/mkletzan/docker-nfs-ganesha/actions) → Select workflow run → Download `sbom-spdx` artifact
-- **Scanning Frequency**: Every PR, every push to master, and every release
+**Quay.io (Server-side):**
+- **[Clair](https://quay.github.io/clair/)** - Continuous vulnerability monitoring
+- Automatic rescanning when new CVEs are published
+- Results: [quay.io/nertpinx/nfs-ganesha](https://quay.io/repository/nertpinx/nfs-ganesha?tab=tags)
+
+**Scanning frequency:** Every PR, every push to master, and every release
 
 See [docs/security-scanning.md](docs/security-scanning.md) for complete details on how security scanning works and how to interpret results.
 
